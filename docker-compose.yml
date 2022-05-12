@@ -1,0 +1,120 @@
+version: '3.4'
+
+services:
+
+  zipkin-server:
+    image: openzipkin/zipkin:2.23.2
+    ports:
+      - 9411:9411
+    restart: always
+    depends_on:
+      - rabbit-mq
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+    networks:
+      - rede-network
+
+  rabbit-mq:
+    image: rabbitmq:3.8.14-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - rede-network
+        
+  user-profile-db:
+    image: mysql:5.7.22
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: admin123
+      MYSQL_DATABASE: user_profile_db
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3312
+    ports:
+      - 3312:3312
+    expose:
+      - 3312
+    networks:
+      - rede-network
+      
+  naming-server:
+    build: 
+      dockerfile: naming-server/Dockerfile
+    ports:
+      - 8761:8761
+    networks:
+      - rede-network
+      
+  api-gateway:
+    build: 
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    ports:
+      - 8765:8765
+    depends_on:
+      - naming-server
+      - rabbit-mq
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+      SPRING_RABBITMQ_HOST: rabbit-mq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+    networks:
+      - rede-network
+      
+    user-profile-service:
+    build:
+      context: .
+      dockerfile: user-profile-service/Dockerfile
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+      SPRING_RABBITMQ_HOST: rabbit-mq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      SPRING.DATASOURCE.URL: jdbc:mysql://user-profile-db:3312/user_profile_db?useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.DATASOURCE.USERNAME: root
+      SPRING.DATASOURCE.PASSWORD: admin123
+      SPRING.FLYWAY.URL: jdbc:mysql://user-profile-db:3312/user_profile_db?useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.FLYWAY.USER: root
+      SPRING.FLYWAY.PASSWORD: admin123
+    ports:
+      - 8200:8200
+    depends_on:
+      - naming-server
+      - user-profile-db
+      - rabbit-mq
+    networks:
+      - rede-network
+
+  oauth-service:
+    build:
+      context: .
+      dockerfile: oauth-service/Dockerfile
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
+      SPRING_RABBITMQ_HOST: rabbit-mq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit     
+    ports:
+      - 8300:8300
+    depends_on:
+      - naming-server
+      - user-profile-service
+      - rabbit-mq
+    networks:
+      - rede-network
+            
+networks:
+  rede-network:
+    driver: bridge

@@ -1,0 +1,24 @@
+﻿CREATE TABLE `user` (
+  `id` INT(10) AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(20) NOT NULL,
+  `login` VARCHAR(20) NOT NULL,
+  `email` VARCHAR(20) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `profiles`(
+  `id` INT(10) AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(20) NOT NULL,  
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `profiles_permissions`(
+  `id` INT(10) AUTO_INCREMENT PRIMARY KEY,
+  `menu_name` VARCHAR(20) NOT NULL,  
+ `menu_link` VARCHAR(20) NOT NULL, 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+
+
