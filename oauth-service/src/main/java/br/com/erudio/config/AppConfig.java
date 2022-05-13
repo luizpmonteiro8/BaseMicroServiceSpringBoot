@@ -17,7 +17,7 @@ public class AppConfig {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-		tokenConverter.setSigningKey("fgdfgsfgsdgkfhdgh@sdfghfsdgdfg");
+		tokenConverter.setSigningKey("123456");
 		return tokenConverter;
 	}
 

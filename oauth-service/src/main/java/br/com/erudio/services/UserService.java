@@ -22,10 +22,12 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-		User user = userProxy.findByLogin(login).getBody();
+		// User user = userProxy.findByLogin(login).getBody();
+		User user = new User(1L, "teste", "teste", "teste@teste.com",
+				"$2a$10$S8wfQA8BIizJdcKYxs7.lOm/uIrSxXrtUy00PA9oAu2wTHtRCD1jm");
 		if (user == null) {
-			logger.error("Email not found: " + login);
-			throw new UsernameNotFoundException("Email not found");
+			logger.error("Login not found: " + login);
+			throw new UsernameNotFoundException("Login not found");
 		}
 		logger.info("Email found: " + login);
 		return new UserSS(user.getId(), user.getEmail(), user.getPassword(), user.getName(), user.getPermissions());

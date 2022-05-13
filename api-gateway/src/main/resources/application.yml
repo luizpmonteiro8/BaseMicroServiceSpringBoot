@@ -1,5 +1,7 @@
 server:
   port: 8765
+  servlet: 
+    context-path: /resource-server-jwt
 eureka:
   client:
     service-url:
@@ -17,18 +19,25 @@ spring:
         uri: lb://user-profile-service
         predicates:
         - Path=/user-profile-service/**
+        filters:
+        - CustomFilter
       - id: oauth-service
         uri: lb://oauth-service        
         predicates:
         - Path=/oauth-service/**
-        sensitive-headers:
-        - Cookie,Set-Cookie
+        filters:
+        - CustomFilter
       - id: openapi
         uri: lb://api-gateway
         predicates:
         - Path=/v3/api-docs/**
         filters:
         - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8300/oauth/token
   sleuth:
     sampler:
       probability: 0.05

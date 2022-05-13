@@ -9,12 +9,13 @@ spring:
     name: user-profile-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3312/user_profile_service?useTimezone=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3312/user_profile_service?useTimezone=true&serverTimezone=UTC&useSSL=false&createDatabaseIfNotExist=true
     username: root
     password: admin123
   jpa:
     hibernate:
       ddl-auto: create
+    generate-ddl: true      
     show-sql: true
     properties:
       hibernate:

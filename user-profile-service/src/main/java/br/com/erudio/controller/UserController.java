@@ -19,9 +19,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.erudio.dto.UserDTO;
 import br.com.erudio.model.User;
 import br.com.erudio.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "User-profile endpoint")
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping("user-profile-service")
 public class UserController {
 
 	@Autowired

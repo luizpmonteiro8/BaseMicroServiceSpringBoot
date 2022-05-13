@@ -47,74 +47,8 @@ services:
     ports:
       - 8761:8761
     networks:
-      - rede-network
-      
-  api-gateway:
-    build: 
-      context: .
-      dockerfile: api-gateway/Dockerfile
-    ports:
-      - 8765:8765
-    depends_on:
-      - naming-server
-      - rabbit-mq
-    environment:
-      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
-      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
-      SPRING_RABBITMQ_HOST: rabbit-mq
-      SPRING_ZIPKIN_SENDER_TYPE: rabbit
-    networks:
-      - rede-network
-      
-    user-profile-service:
-    build:
-      context: .
-      dockerfile: user-profile-service/Dockerfile
-    restart: always
-    environment:
-      TZ: America/Sao_Paulo
-      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
-      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
-      SPRING_RABBITMQ_HOST: rabbit-mq
-      SPRING_ZIPKIN_SENDER_TYPE: rabbit
-      SPRING.DATASOURCE.URL: jdbc:mysql://user-profile-db:3312/user_profile_db?useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
-      SPRING.DATASOURCE.USERNAME: root
-      SPRING.DATASOURCE.PASSWORD: admin123
-      SPRING.FLYWAY.URL: jdbc:mysql://user-profile-db:3312/user_profile_db?useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
-      SPRING.FLYWAY.USER: root
-      SPRING.FLYWAY.PASSWORD: admin123
-    ports:
-      - 8200:8200
-    depends_on:
-      - naming-server
-      - user-profile-db
-      - rabbit-mq
-    networks:
-      - rede-network
-
-  oauth-service:
-    build:
-      context: .
-      dockerfile: oauth-service/Dockerfile
-    restart: always
-    environment:
-      TZ: America/Sao_Paulo
-      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
-      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbit-mq:5672
-      SPRING_RABBITMQ_HOST: rabbit-mq
-      SPRING_ZIPKIN_SENDER_TYPE: rabbit     
-    ports:
-      - 8300:8300
-    depends_on:
-      - naming-server
-      - user-profile-service
-      - rabbit-mq
-    networks:
-      - rede-network
-            
+      - rede-network    
+    
 networks:
   rede-network:
     driver: bridge

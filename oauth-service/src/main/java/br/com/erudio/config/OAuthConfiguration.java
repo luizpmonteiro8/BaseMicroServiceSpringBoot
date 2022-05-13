@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @EnableAuthorizationServer
-public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -35,8 +35,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory().withClient("app1").secret(passwordEncoder.encode("app1")).scopes("read", "write")
-				.authorizedGrantTypes("password").accessTokenValiditySeconds(86400);
+		clients.inMemory().withClient("app123").secret(passwordEncoder.encode("app123")).scopes("read", "write")
+				.authorizedGrantTypes("password").accessTokenValiditySeconds(86400).resourceIds("api");
 	}
 
 	@Override
@@ -44,4 +44,5 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore)
 				.accessTokenConverter(accessTokenConverter);
 	}
+
 }

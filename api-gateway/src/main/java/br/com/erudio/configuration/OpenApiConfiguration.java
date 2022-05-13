@@ -26,8 +26,8 @@ public class OpenApiConfiguration {
 						.matches(".*-service"))
 							.forEach(routeDefinition -> {
 								String name = routeDefinition.getId();
-								config.addGroup(name);
-								GroupedOpenApi.builder()
+		 						config.addGroup(name);
+				 				GroupedOpenApi.builder()
 									.pathsToMatch("/" + name + "/**")
 									.group(name).build();
 							}

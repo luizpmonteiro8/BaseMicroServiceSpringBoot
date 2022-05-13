@@ -3,6 +3,7 @@ package br.com.erudio.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +42,7 @@ public class UserService {
 	public Page<User> findPage(String search, Integer page, Integer size, String orderBy, String direction) {
 		Pageable pageRequest = PageRequest.of(page, size, Direction.valueOf(direction), orderBy);
 
-		return repo.findByNamePagination(search, pageRequest);
+		return null;// repo.findByNamePagination(search, pageRequest);
 	}
 
 	public User insert(User obj) {
@@ -84,6 +85,11 @@ public class UserService {
 		user.addPermissions(Permissions.ADMIN);
 
 		return user;
+	}
+
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 }

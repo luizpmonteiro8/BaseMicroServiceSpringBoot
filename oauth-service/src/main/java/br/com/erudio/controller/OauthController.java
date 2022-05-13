@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.erudio.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Oauth endpoint")
 @RestController
-@RequestMapping(value = "/users")
-public class UserController {
+@RequestMapping(value = "oauth-service")
+public class OauthController {
 
 	@Autowired
 	private UserService service;
@@ -27,4 +29,5 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
+
 }
