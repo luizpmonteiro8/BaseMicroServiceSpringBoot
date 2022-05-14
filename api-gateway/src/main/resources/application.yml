@@ -1,7 +1,5 @@
 server:
   port: 8765
-  servlet: 
-    context-path: /resource-server-jwt
 eureka:
   client:
     service-url:
@@ -9,6 +7,12 @@ eureka:
 spring:
   application:
     name: api-gateway
+  zipkin:
+    base-url: http://zipkin-server:9411/
+    sender:
+      type: rabbit 
+  rabbitmq:
+    addresses: amqp://guest:guest@localhost:5672
   cloud:
     gateway:
       discovery:
@@ -20,24 +24,19 @@ spring:
         predicates:
         - Path=/user-profile-service/**
         filters:
-        - CustomFilter
+        - AuthenticationFilter
       - id: oauth-service
         uri: lb://oauth-service        
         predicates:
         - Path=/oauth-service/**
         filters:
-        - CustomFilter
+        - AuthenticationFilter
       - id: openapi
         uri: lb://api-gateway
         predicates:
         - Path=/v3/api-docs/**
         filters:
         - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8300/oauth/token
   sleuth:
     sampler:
-      probability: 0.05
+      probability: 1.00

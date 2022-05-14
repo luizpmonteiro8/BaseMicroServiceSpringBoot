@@ -2,11 +2,19 @@ server:
   port: 8200
 eureka:
   client:
+    refresh:
+      enable: true
     service-url:
       defaultZone: http://localhost:8761/eureka
 spring:
   application:
     name: user-profile-service
+  zipkin:
+    base-url: http://zipkin-server:9411/
+    sender:
+      type: rabbit
+  rabbitmq:
+    addresses: amqp://guest:guest@localhost:5672
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3312/user_profile_service?useTimezone=true&serverTimezone=UTC&useSSL=false&createDatabaseIfNotExist=true
@@ -14,7 +22,7 @@ spring:
     password: admin123
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     generate-ddl: true      
     show-sql: true
     properties:

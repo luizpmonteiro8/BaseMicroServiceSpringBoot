@@ -22,9 +22,8 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-		// User user = userProxy.findByLogin(login).getBody();
-		User user = new User(1L, "teste", "teste", "teste@teste.com",
-				"$2a$10$S8wfQA8BIizJdcKYxs7.lOm/uIrSxXrtUy00PA9oAu2wTHtRCD1jm");
+		User user = userProxy.findByLogin(login).getBody();
+
 		if (user == null) {
 			logger.error("Login not found: " + login);
 			throw new UsernameNotFoundException("Login not found");

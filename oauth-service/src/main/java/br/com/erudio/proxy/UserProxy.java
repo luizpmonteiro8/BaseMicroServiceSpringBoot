@@ -10,7 +10,6 @@ import br.com.erudio.model.User;
 @FeignClient(name = "user-profile-service")
 public interface UserProxy {
 
-	@GetMapping(value = "/search")
+	@GetMapping(value = "/user-profile-service/search")
 	ResponseEntity<User> findByLogin(@RequestParam String login);
-
 }

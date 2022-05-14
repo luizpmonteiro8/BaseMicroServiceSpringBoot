@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,9 @@ public class UserController {
 	@Autowired
 	private UserService service;
 
+	@Autowired
+	private Environment env;
+
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
 	public ResponseEntity<Page<UserDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "size", defaultValue = "24") Integer size,
@@ -38,6 +42,11 @@ public class UserController {
 		Page<User> list = service.findPage(search, page, size, orderBy, direction);
 		Page<UserDTO> listDto = list.map(obj -> new UserDTO(obj));
 		return ResponseEntity.ok().body(listDto);
+	}
+
+	@GetMapping(value = "/port")
+	public String port() {
+		return env.getProperty("local.server.port");
 	}
 
 	@GetMapping(value = "/search")

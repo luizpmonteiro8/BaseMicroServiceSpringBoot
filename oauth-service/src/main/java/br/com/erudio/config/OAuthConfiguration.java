@@ -36,7 +36,7 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("app123").secret(passwordEncoder.encode("app123")).scopes("read", "write")
-				.authorizedGrantTypes("password").accessTokenValiditySeconds(86400).resourceIds("api");
+				.authorizedGrantTypes("password").accessTokenValiditySeconds(8600400).resourceIds("api");
 	}
 
 	@Override
