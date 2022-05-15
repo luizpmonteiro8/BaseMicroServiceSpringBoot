@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+
+
 @Configuration
 public class OpenApiConfiguration {
 	
@@ -24,7 +26,7 @@ public class OpenApiConfiguration {
 		definitions.stream().filter(
 					routeDefinition -> routeDefinition.getId()
 						.matches(".*-service"))
-							.forEach(routeDefinition -> {
+							.forEach(routeDefinition -> {								
 								String name = routeDefinition.getId();
 		 						config.addGroup(name);
 				 				GroupedOpenApi.builder()
